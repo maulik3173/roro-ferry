@@ -27,7 +27,7 @@ const Search = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -800 }}
       transition={{ duration: 1.5, ease: "easeOut" }}
-      className="w-full bg-white shadow-lg p-4 md:p-5 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 md:gap-5"
+      className="w-full bg-white shadow-lg p-4 md:p-5  rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 md:gap-5"
     >
       {/* Trip Type Selection */}
       <div className="flex flex-col items-start gap-2 text-sm md:text-lg font-medium">
@@ -108,9 +108,19 @@ const Search = () => {
       )}
 
       {/* Search Button */}
-      <button className="w-full md:w-auto px-6 py-3 bg-blue-500 text-white text-sm md:text-lg font-bold rounded-lg border border-blue-700">
-        SEARCH
-      </button>
+  
+<button
+  class="text-xl w-32 h-12 rounded-xl bg-blue-500 text-white relative overflow-hidden group z-10 hover:text-white duration-1000"
+>
+  <span
+    class="absolute bg-blue-600 w-36 h-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"
+  ></span>
+  <span
+    class="absolute bg-blue-800 w-36 h-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"
+  ></span>
+  Button
+</button>
+
     </motion.div>
   );
 }
