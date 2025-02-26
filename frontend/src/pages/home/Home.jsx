@@ -1,5 +1,6 @@
 import React from "react";
 import Hero from "./hero/Hero";
+
 import Service from "./service/Service";
 const Home = () => {
   return (
@@ -8,7 +9,6 @@ const Home = () => {
     <Hero />
     {/* service */}
     <Service />
-   
     </div>
   );
 }; 
