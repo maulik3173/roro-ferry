@@ -1,132 +1,162 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Login = () => {
-  return (
-    <div>
-      <div class="h-full bg-gray-400 dark:bg-gray-900">
-        <div class="mx-auto">
-          <div class="flex justify-center px-6 py-12">
-            <div class="w-full xl:w-3/4 lg:w-11/12 flex">
-              <div
-                class="w-full h-auto bg-gray-400 dark:bg-gray-800 hidden lg:block lg:w-5/12 bg-cover rounded-l-lg"
-                style="background-image: url('https://source.unsplash.com/Mv9hjnEUHR4/600x800')"
-              ></div>
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ email: "", password: "" });
 
-              <div class="w-full lg:w-7/12 bg-white dark:bg-gray-700 p-5 rounded-lg lg:rounded-l-none">
-                <h3 class="py-4 text-2xl text-center text-gray-800 dark:text-white">
-                  Create an Account!
-                </h3>
-                <form class="px-8 pt-6 pb-8 mb-4 bg-white dark:bg-gray-800 rounded">
-                  <div class="mb-4 md:flex md:justify-between">
-                    <div class="mb-4 md:mr-2 md:mb-0">
-                      <label
-                        class="block mb-2 text-sm font-bold text-gray-700 dark:text-white"
-                        for="firstName"
-                      >
-                        First Name
-                      </label>
-                      <input
-                        class="w-full px-3 py-2 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        id="firstName"
-                        type="text"
-                        placeholder="First Name"
-                      />
-                    </div>
-                    <div class="md:ml-2">
-                      <label
-                        class="block mb-2 text-sm font-bold text-gray-700 dark:text-white"
-                        for="lastName"
-                      >
-                        Last Name
-                      </label>
-                      <input
-                        class="w-full px-3 py-2 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        id="lastName"
-                        type="text"
-                        placeholder="Last Name"
-                      />
-                    </div>
-                  </div>
-                  <div class="mb-4">
-                    <label
-                      class="block mb-2 text-sm font-bold text-gray-700 dark:text-white"
-                      for="email"
-                    >
-                      Email
-                    </label>
-                    <input
-                      class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                      id="email"
-                      type="email"
-                      placeholder="Email"
-                    />
-                  </div>
-                  <div class="mb-4 md:flex md:justify-between">
-                    <div class="mb-4 md:mr-2 md:mb-0">
-                      <label
-                        class="block mb-2 text-sm font-bold text-gray-700 dark:text-white"
-                        for="password"
-                      >
-                        Password
-                      </label>
-                      <input
-                        class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 dark:text-white border border-red-500 rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        id="password"
-                        type="password"
-                        placeholder="******************"
-                      />
-                      <p class="text-xs italic text-red-500">
-                        Please choose a password.
-                      </p>
-                    </div>
-                    <div class="md:ml-2">
-                      <label
-                        class="block mb-2 text-sm font-bold text-gray-700 dark:text-white"
-                        for="c_password"
-                      >
-                        Confirm Password
-                      </label>
-                      <input
-                        class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 dark:text-white border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        id="c_password"
-                        type="password"
-                        placeholder="******************"
-                      />
-                    </div>
-                  </div>
-                  <div class="mb-6 text-center">
-                    <button
-                      class="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-900 focus:outline-none focus:shadow-outline"
-                      type="button"
-                    >
-                      Register Account
-                    </button>
-                  </div>
-                  <hr class="mb-6 border-t" />
-                  <div class="text-center">
-                    <a
-                      class="inline-block text-sm text-blue-500 dark:text-blue-500 align-baseline hover:text-blue-800"
-                      href="#"
-                    >
-                      Forgot Password?
-                    </a>
-                  </div>
-                  <div class="text-center">
-                    <a
-                      class="inline-block text-sm text-blue-500 dark:text-blue-500 align-baseline hover:text-blue-800"
-                      href="./index.html"
-                    >
-                      Already have an account? Login!
-                    </a>
-                  </div>
-                </form>
+  const navigate = useNavigate();
+  const location = useLocation();
+  const previousPage = location.state?.from || "/"; // Default to home page if no previous page
+
+  const validateForm = () => {
+    let isValid = true;
+    let newErrors = { email: "", password: "" };
+
+    if (!email) {
+      newErrors.email = "Email is required.";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Enter a valid email address.";
+      isValid = false;
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required.";
+      isValid = false;
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        // Simulating login API request
+        const response = await fakeLogin(email, password);
+
+        if (response.success) {
+          localStorage.setItem("isAuthenticated", "true"); // Save login status
+          navigate(previousPage, { replace: true }); // Redirect back to previous page
+        } else {
+          setErrors({ email: "Invalid credentials", password: "" });
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        setErrors({ email: "Login failed. Try again later.", password: "" });
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Sign in to your account
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600 max-w">
+          Or{" "}
+          <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
+            Create an account
+          </Link>
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <div className="mt-1">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
               </div>
             </div>
-          </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember_me"
+                  name="remember_me"
+                  type="checkbox"
+                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                />
+                <label htmlFor="remember_me" className="ml-2 block text-sm text-gray-900">
+                  Remember me
+                </label>
+              </div>
+
+              <div className="text-sm">
+                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                  Forgot your password?
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Sign in
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   );
+};
+
+// Fake API function (replace with actual login API)
+const fakeLogin = (email, password) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      if (email === "test@example.com" && password === "123456") {
+        resolve({ success: true });
+      } else {
+        resolve({ success: false });
+      }
+    }, 1000);
+  });
 };
 
 export default Login;
